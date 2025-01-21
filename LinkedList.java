@@ -208,23 +208,27 @@ public class LinkedList {
 	 */
 	public void remove(Node node) {
         //// Write your code here
+		if (first == null) return;
         if(first == node){
             first = first.next;
             if(first == null){
                 last = null;
             }
             size--;
+			return;
         }
         Node current = first;
         while(current != null && current.next != node){
             current = current.next;
         }
-        if(current != null && current.next == node){
-            current = current.next.next;
-            if(current.next == null){
-                last = current;
-            }
-            size--;
+        if (current != null && current.next == node) {
+			current.next = current.next.next; 
+	
+			if (current.next == null) {  
+				last = current;
+			}
+	
+			size--;
         }
     }
 
