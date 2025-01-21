@@ -90,10 +90,15 @@ public class LinkedList {
         if(index == 0){
             newNode.next = first;
             first = newNode;
+			if (last == null) { 
+				last = newNode;
+			}
         }
         else if(index == size){
-            newNode.next = last;
-            last = newNode;
+            if (last != null) {
+				last.next = newNode;  // Link the last node to the new node
+			}
+			last = newNode;
         }
         else{
             Node current = first;
@@ -162,8 +167,11 @@ public class LinkedList {
 	 */
 	public MemoryBlock getBlock(int index) {
         //// Replace the following statement with your code
+		if (index < 0 || index >= size) {
+            throw new IllegalArgumentException("index must be between 0 and size");
+        }
         Node current = first;
-        for (int i = 0; i < index - 1; i++) {
+        for (int i = 0; i < index; i++) {
             current = current.next;  
         }
         return current.block;
@@ -180,13 +188,13 @@ public class LinkedList {
 	public int indexOf(MemoryBlock block) {
         //// Replace the following statement with your code
         Node current = first;
-        int index = -1, i = 0;
+        int index = 0;
         while (current != null){
-            if(current.equals(block)){
-                index = i;
+            if(current.block.equals(block)){
+                return index;
             }
             current = current.next;  
-            i++;
+            index++;
         }
         return index;
     }
