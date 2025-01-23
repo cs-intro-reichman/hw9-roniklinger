@@ -127,7 +127,7 @@ public class LinkedList {
             last = newNode;
         }
         else{
-            newNode.next = last;
+            last.next = newNode;
             last = newNode;
         }
         size++;
@@ -196,7 +196,7 @@ public class LinkedList {
             current = current.next;  
             index++;
         }
-        return index;
+        return -1;
     }
 
 
@@ -208,7 +208,12 @@ public class LinkedList {
 	 */
 	public void remove(Node node) {
         //// Write your code here
-		if (first == null) return;
+		if (node == null) {
+			throw new NullPointerException("Cannot remove a null node");
+		}
+		if (first == null) {
+			return;
+		}
         if(first == node){
             first = first.next;
             if(first == null){
@@ -242,26 +247,29 @@ public class LinkedList {
 	 */
 	public void remove(int index) {
         //// Write your code here
+		if (index < 0 || index >= size) {
+			throw new IllegalArgumentException("index must be between 0 and size");
+		}
+		if (first == null) {
+			return;
+		}
         if(index == 0){
             first = first.next;
             if(first == null){
                 last = null;
             }
             size--;
+			return;
         }
-        else{
-            Node current = first;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.next;  
-            }
-            if(current != null && current.next != null){
-                current =current.next.next;
-                if(current == null){
-                    last = null;
-                }
-            }
-            size--;
+        Node current = first;
+        for (int i = 0; i < index - 1; i++) {
+	        current = current.next;  
         }
+		current.next = current.next.next;
+		if (current.next == null) {
+			last = current;
+		}
+		size--;
     }
 
 
@@ -274,26 +282,36 @@ public class LinkedList {
 	 */
 	public void remove(MemoryBlock block) {
         //// Write your code here
-        if(first.equals(block)){
+		if (block == null) {
+			throw new IllegalArgumentException("index must be between 0 and size");
+		}
+	
+		if (first == null) {
+			return;
+		}
+        if(first.block.equals(block)){
             first = first.next;
             if(first == null){
                 last = null;
             }
             size--;
+			return;
         }
         else{
             Node current = first;
-            while(current != null && !current.next.equals(block)){
-                current = current.next;
-            }
-            if(current != null && current.next.equals(block)){
-                current = current.next;
-                if(current == null){
-                    last = null;
-                }
-                size--;
-            }
+            while (current != null && current.next != null) {
+				if (current.next.block.equals(block)) {
+					current.next = current.next.next;
+					if (current.next == null) {
+						last = current;
+					}
+					size--;
+					return;
+				}
+				current = current.next;
+			}
         }
+		throw new IllegalArgumentException("index must be between 0 and size");
     }   
 	
 
