@@ -84,8 +84,6 @@ public class LinkedList {
 	 *         if index is negative or greater than the list's size
 	 */
 	public void add(int index, MemoryBlock block) {
-        //// Write your code here
-        /// 
         Node newNode = new Node(block);
         if(index == 0){
             newNode.next = first;
@@ -96,7 +94,7 @@ public class LinkedList {
         }
         else if(index == size){
             if (last != null) {
-				last.next = newNode;  // Link the last node to the new node
+				last.next = newNode;
 			}
 			last = newNode;
         }
@@ -120,17 +118,7 @@ public class LinkedList {
 	 *        the given memory block
 	 */
 	public void addLast(MemoryBlock block) {
-        //// Write your code here
-        Node newNode = new Node(block);
-        if (first == null) {
-            first = newNode;
-            last = newNode;
-        }
-        else{
-            last.next = newNode;
-            last = newNode;
-        }
-        size++;
+        add(size ,block);
     }
 
 	
@@ -142,17 +130,7 @@ public class LinkedList {
 	 *        the given memory block
 	 */
 	public void addFirst(MemoryBlock block) {
-        //// Write your code here
-        Node newNode = new Node(block);
-        if (first == null) {
-            first = newNode;
-            last = newNode;
-        }
-        else{
-            newNode.next = first;
-            first = newNode;
-        }
-        size++;
+        add(0, block);
     }
 
 
@@ -166,7 +144,6 @@ public class LinkedList {
 	 *         if index is negative or greater than or equal to size
 	 */
 	public MemoryBlock getBlock(int index) {
-        //// Replace the following statement with your code
 		if (index < 0 || index >= size) {
             throw new IllegalArgumentException("index must be between 0 and size");
         }
@@ -186,7 +163,6 @@ public class LinkedList {
 	 * @return the index of the block, or -1 if the block is not in this list
 	 */
 	public int indexOf(MemoryBlock block) {
-        //// Replace the following statement with your code
         Node current = first;
         int index = 0;
         while (current != null){
@@ -207,7 +183,6 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-        //// Write your code here
 		if (node == null) {
 			throw new NullPointerException("Cannot remove a null node");
 		}
@@ -246,7 +221,6 @@ public class LinkedList {
 	 *         if index is negative or greater than or equal to size
 	 */
 	public void remove(int index) {
-        //// Write your code here
 		if (index < 0 || index >= size) {
 			throw new IllegalArgumentException("index must be between 0 and size");
 		}
@@ -281,11 +255,9 @@ public class LinkedList {
 	 *         if the given memory block is not in this list
 	 */
 	public void remove(MemoryBlock block) {
-        //// Write your code here
 		if (block == null) {
 			throw new IllegalArgumentException("index must be between 0 and size");
 		}
-	
 		if (first == null) {
 			return;
 		}
@@ -326,16 +298,14 @@ public class LinkedList {
      * A textual representation of this list, for debugging.
      */
     public String toString() {
-        //// Replace the following statement with your code
         String listText = "";
         Node current = first;
-        for(int i = 0; i < size; i++){
-            listText = listText + current.toString();
+        while (current != null){
+            listText += current.block + " ";
             current = current.next;
         }
         return listText;
     }
-
 }
 
 

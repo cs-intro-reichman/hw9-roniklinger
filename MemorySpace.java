@@ -57,10 +57,29 @@ public class MemorySpace {
 	 *        the length (in words) of the memory block that has to be allocated
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
-	public int malloc(int length) {		
-		//// Replace the following statement with your code
+	public int malloc(int length) {
+		if (freeList == null || freeList.getSize() == 0) {
+			return -1;
+		}
+		Node current = freeList.getNode(0); 
+		while (current != null) {
+			if (current.block.length >= length) {
+				int allocatedBaseAddress = current.block.baseAddress;
+				MemoryBlock allocatedBlock = new MemoryBlock(allocatedBaseAddress, length);
+				allocatedList.addLast(allocatedBlock);
+				if (current.block.length == length) {
+					freeList.remove(current);
+				} else {
+					current.block.baseAddress += length;
+					current.block.length -= length;
+				}
+				return allocatedBaseAddress;
+			}
+			current = current.next;
+		}
 		return -1;
 	}
+
 
 	/**
 	 * Frees the memory block whose base address equals the given address.
@@ -71,9 +90,20 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		//// Write your code here
+		if (allocatedList == null || allocatedList.getSize() == 0) {
+			throw new IllegalArgumentException("index must be between 0 and size");
+		}
+		Node current = allocatedList.getNode(0);
+		while (current != null) {
+			if (current.block.baseAddress == address) {
+				allocatedList.remove(current.block);
+				freeList.addLast(current.block);
+				return;
+			}
+			current = current.next;
+		}
 	}
-	
+
 	/**
 	 * A textual representation of the free list and the allocated list of this memory space, 
 	 * for debugging purposes.
@@ -88,7 +118,38 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
-		/// TODO: Implement defrag test
-		//// Write your code here
+		if (freeList.getSize() <= 1) {
+			return;
+		}
+		sortFreeList();
+		int i = 0;
+		while (i != freeList.getSize() - 1) {
+			MemoryBlock currentBlock = freeList.getBlock(i);
+			MemoryBlock nextBlock = freeList.getBlock(i + 1);
+			if (currentBlock.baseAddress + currentBlock.length == nextBlock.baseAddress) {
+				currentBlock.length += nextBlock.length;
+				freeList.remove(nextBlock);
+			} 
+			else {
+				i++;
+			}
+		}
+	}
+
+	// Sort the free list by "Bubble Sort"
+	public void sortFreeList() {
+		int n = freeList.getSize();
+		for(int i = 0; i < n - 1; i++){
+			for(int j = 0; j < n - i - 1; j++){
+				MemoryBlock curretBlock = freeList.getBlock(j);
+				MemoryBlock nextBlock = freeList.getBlock(j + 1);
+				if(curretBlock.baseAddress > nextBlock.baseAddress){
+					freeList.remove(curretBlock);
+					freeList.remove(nextBlock);
+					freeList.add(j, nextBlock);
+					freeList.add(j + 1, curretBlock);
+				}
+			}
+		}
 	}
 }
